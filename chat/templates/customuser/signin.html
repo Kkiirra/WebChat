@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/customuser/registration.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <div class="registration-box pb-50">
+            <h2>Sign In</h2>
+            <form class="registration-form" method="post" action="">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="nickname" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="signup-link">Not a Member yet?
+                    <a href="{% url 'customuser:signup' %}" class="link-white">Sign up</a>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary-l">Signin</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

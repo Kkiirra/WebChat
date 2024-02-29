@@ -1,0 +1,20 @@
+function sendMessage() {
+  var messageInput = document.getElementById("message-input");
+  var message = messageInput.value;
+  if (message.trim() !== "") {
+    // Отправляем сообщение на сервер (пока не реализовано)
+    // Здесь можно использовать AJAX запросы или WebSocket для отправки сообщений
+    // После отправки сообщения обновляем отображение чата
+    appendMessage("Вы", message);
+    messageInput.value = "";
+  }
+}
+
+function appendMessage(sender, message) {
+  var chatMessages = document.getElementById("chat-messages");
+  var messageDiv = document.createElement("div");
+  messageDiv.innerHTML = "<strong>" + sender + ":</strong> " + message;
+  chatMessages.appendChild(messageDiv);
+  // Прокручиваем чат вниз, чтобы видеть последние сообщения
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}

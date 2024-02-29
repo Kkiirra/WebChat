@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #343a40; /* Тёмный фон */
+    background-image: url('/static/images/back3.png'); /* Ваше фоновое изображение */
+    background-size: cover;
+    background-position: center;
+    color: #ffffff; /* Белый цвет текста */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.registration-box {
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный чёрный цвет для блока регистрации */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Белая тень */
+    max-width: 400px;
+    width: 100%;
+}
+
+.registration-box h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff; /* Белый цвет текста */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff; /* Белый цвет текста */
+}
+
+.form-group input {
+    width: calc(100% - 20px); /* Уменьшаем ширину инпута на 20px, чтобы компенсировать padding */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    color: #343a40; /* Цвет текста поля ввода */
+    background-color: #F2F3F4; /* Белый фон поля ввода */
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: pink; /* Белый цвет кнопки */
+    color: black; /* Цвет текста кнопки */
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: teal; /* Изменение цвета при наведении */
+}

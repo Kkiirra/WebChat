@@ -12,11 +12,16 @@
   <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css"/>
 </head>
+
+{% if user.is_authenticated %}
+    <input type="hidden" id="currentUserId" value="{{ user.id }}">
+{% endif %}
+
 <body>
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-4 col-12 card-stacked">
-              <div class="card shadow-line mb-3 chat">
+            <div class="col-md-4 col-12 card-stacked padding-0">
+              <div class="card shadow-line chat">
                 <div class="chat-user-detail">
                   <div class="p-3 chat-header">
                     <div class="w-100">
@@ -57,7 +62,8 @@
                 <div class="p-3 chat-header">
                   <div class="d-flex">
                     <div class="w-100 d-flex pl-0">
-                      <img class="user-detail-trigger rounded-circle shadow avatar-sm mr-3 chat-profile-picture" src="https://user-images.githubusercontent.com/35243461/168796876-2e363a49-b32c-4218-b5a3-ce12493af69e.jpg" />
+                        <div class="avatar-circle user-detail-trigger">{{user.nickname|first}}</div>
+<!--                        <img class="user-detail-trigger rounded-circle shadow avatar-sm mr-3 chat-profile-picture" src="https://user-images.githubusercontent.com/35243461/168796876-2e363a49-b32c-4218-b5a3-ce12493af69e.jpg" />-->
                     </div>
                     <div class="flex-shrink-0 margin-auto">
                       <a href="#" class="btn btn-sm btn-icon btn-light active text-dark ml-2">
@@ -151,17 +157,18 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-8 col-12 card-stacked">
+            <div class="col-md-8 col-12 card-stacked padding-0">
               <div class="card shadow-line mb-3 chat chat-panel hidden_visibility">
                 <div class="p-3 chat-header">
                   <div class="d-flex">
                     <div class="w-100 d-flex pl-0">
-                      <img class="rounded-circle shadow avatar-sm mr-3 chat-profile-picture" src="https://user-images.githubusercontent.com/35243461/168796877-f6c8819a-5d6e-4b2a-bd56-04963639239b.jpg">
+<!--                      <img class="rounded-circle shadow avatar-sm mr-3 chat-profile-picture" src="https://user-images.githubusercontent.com/35243461/168796877-f6c8819a-5d6e-4b2a-bd56-04963639239b.jpg">-->
+                      <div class="avatar-circle" id="chat-user_image"></div>
                       <div class="mr-3">
                         <a href="!#">
-                          <p class="fw-400 mb-0 text-dark-75">Beate Lemoine</p>
+                          <p class="fw-400 mb-0 text-dark-75" id="ChatUserName"></p>
                         </a>
-                        <p class="sub-caption text-muted text-small mb-0"><i class="la la-clock mr-1"></i>last seen today at 09:15 PM</p>
+                        <p class="sub-caption text-muted text-small mb-0" id="last_seen"><i class="la la-clock mr-1"></i></p>
                       </div>
                     </div>
                     <div class="flex-shrink-0 margin-auto">
@@ -295,8 +302,8 @@
     })(jQuery);
   </script>
 
-
-        <script src="{% static 'javascript/chat.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.25.0/date-fns.min.js"></script>
+    <script src="{% static 'javascript/chat.js' %}"></script>
 
 
 

@@ -4,7 +4,7 @@ from channels.routing import URLRouter
 import os
 from django.core.asgi import get_asgi_application
 from django.urls import path
-from chat_messages.consumer import YourConsumer, Consumer
+from chat_messages.consumer import Consumer
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat.settings')

@@ -1,8 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
+
+document.addEventListener('DOMContentLoaded', async function() {
     // Получение всех элементов чата
+
     const chatItems = document.querySelectorAll('.chat-item');
     let currentChatItemId = null; // Хранит ID текущего чата
     let chatSocket = null; // WebSocket-соединение
+    let currentUser = parseInt(document.getElementById('currentUserId').value);
 
     // Добавление обработчика события для каждого элемента чата
     chatItems.forEach(function(chatItem) {
@@ -11,11 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обработчик события клика на элемент чата
     async function handleChatItemClick() {
+        const chatItemId = this.getAttribute('id');
+        const paragraph = document.getElementById('ChatUserName');
+        const image_div = document.getElementById('chat-user_image');
+        const last_seen = document.getElementById('last_seen');
+
         // Отображение панели чата, если она скрыта
         toggleChatPanelVisibility(true);
 
+        const other_user = await fetch(`/api/chat/other-user/${chatItemId}/`);
+        const ChatUserInfo = await other_user.json();
+
+        paragraph.textContent = ChatUserInfo.nickname;
+        image_div.textContent = ChatUserInfo.nickname[0];
+        last_seen.textContent = 'Last seen ' + formatLastSeen(ChatUserInfo.last_login);
+
         // Получение ID чата
-        const chatItemId = this.getAttribute('id');
 
         // Очистка текущего чата
         clearChat();
@@ -23,11 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Отправка GET запроса для нового чата
         try {
 
-            const response = await fetch(`/api/chat-messages/${chatItemId}/current-user/`);
+            const response = await fetch(`/api/chat/messages/${chatItemId}/`);
+
             if (!response.ok) {
                 throw new Error('Ошибка при получении данных');
             }
             const UsersMessages = await response.json();
+
+
 
             // Вызов функции для отображения сообщений нового чата
             displayMessages(UsersMessages);
@@ -78,20 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Функция для отображения одного сообщения чата
     async function displayMessage(chatContainer, message) {
         // Определение текущего пользователя
-        const currentUser = await getCurrentUser();
+
 
         // Создание элемента сообщения
         const messageDiv = document.createElement('div');
-
         // Установка класса сообщения в зависимости от отправителя
-        if (message.sender.id === currentUser.id) {
+        if (message.sender.id === currentUser) {
+
             messageDiv.className = 'd-flex flex-row-reverse mb-2';
+
         } else {
             messageDiv.className = 'left-chat-message fs-13 mb-2';
         }
 
         // Добавление содержимого сообщения в зависимости от отправителя
-        if (message.sender.id === currentUser.id) {
+        if (message.sender.id === currentUser) {
+
+
             messageDiv.innerHTML = `
                 <div class="right-chat-message fs-13 mb-2">
                     <div class="mb-0 mr-3 pr-4">
@@ -137,22 +157,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${hours}:${minutes}`;
     }
 
-    // Функция для получения текущего пользователя
-    async function getCurrentUser() {
-        try {
-            // Отправка запроса для получения текущего пользователя
-            const response = await fetch('/api/current-user/');
-
-            if (!response.ok) {
-                throw new Error('Ошибка при получении текущего пользователя');
-            }
-
-            const userData = await response.json();
-            return userData;
-        } catch (error) {
-            console.error('Ошибка при получении текущего пользователя:', error);
-            throw error; // Пробросить ошибку для обработки в вызывающем коде
-        }
+    function formatLastSeen(lastLoginString) {
+        const date = new Date(lastLoginString);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${hours}:${minutes} ${day}.${month}.${year}`;
     }
 
     // Функция для подключения к WebSocket-серверу
@@ -173,15 +185,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Обработчик события получения сообщения
         chatSocket.onmessage = function(event) {
-            var data = event.data;
-            // Парсинг строки JSON в объект JavaScript
-            var parsedData = JSON.parse(data);
+            var data = JSON.parse(event.data);
 
-            // Получение значения поля "message"
-            var message = parsedData.message;
+            if (data.message && data.is_online !== undefined && data.nickname) {
+                console.log(data)
+        // Обработка текстового сообщения
+            } else if (data.message && data.is_online == undefined) {
+                console.log(data)
 
-            // Добавление нового сообщения в чат
-            displayMessages([message]);
+                // Получение значения поля "message"
+                var message = data.message;
+
+                // Добавление нового сообщения в чат
+                displayMessages([message]);
+            } else {
+                console.log('else')
+            }
+
         };
 
         // Обработчик события ошибки
@@ -192,10 +212,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Функция для отправки сообщения через WebSocket
     async function sendMessage(message) {
-        const currentUser = await getCurrentUser();
         chatSocket.send(JSON.stringify({
             'message': message,
-            'user_id': currentUser.id,
+            'user_id': currentUser,
         }));
     }
 

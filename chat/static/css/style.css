@@ -5,13 +5,18 @@
 .container-fluid.full-page-container {
   height: 100%;
 }
-body {
-    overflow: hidden;
 
+
+.padding-0 {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+body {
+  overflow: hidden;
   font-size: 14px;
   font-weight: 300;
   color: rgb(58, 65, 111);
-    background-image: url('/static/images/back3.png'); /* Ваше фоновое изображение */
 
   font-family: Poppins !important;
   margin: 0px;
@@ -38,7 +43,7 @@ html body a {
 .card-stacked {
   display: flex;
   flex-flow: row wrap;
-  background-color: rgba(255, 255, 255, 0.9); /* Цвет фона с прозрачностью 0.9 */
+  background-color: rgba(35, 45, 37, 1); /* Цвет фона с прозрачностью 0.9 */
 
 }
 
@@ -640,7 +645,7 @@ img.shadow {
 }
 
 .card {
-  margin-bottom: 1.875rem;
+  padding-bottom: 1.875rem;
   border: none;
   box-shadow: 0 1px 2px #00000030;
   border-radius: 0.45rem;
@@ -812,11 +817,12 @@ img.shadow {
 
 
 .avatar-circle {
+    text-transform: uppercase;
     margin-right: 6px;
     width: 40px; /* Размер кружочка */
     height: 40px; /* Размер кружочка */
     border-radius: 50%; /* Делаем кружочек */
-    background-color: #007bff; /* Цвет кружочка */
+    background-color: #438e7d; /* Цвет кружочка */
     color: #fff; /* Цвет текста (буквы) */
     font-size: 20px; /* Размер текста (буквы) */
     text-align: center; /* Центрируем текст (букву) */

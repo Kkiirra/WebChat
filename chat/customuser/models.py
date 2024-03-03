@@ -74,6 +74,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name=_("date joined"), default=timezone.now,
     )
 
+    is_online = models.BooleanField(default=False)
     objects = UserManager()
 
     def __str__(self):

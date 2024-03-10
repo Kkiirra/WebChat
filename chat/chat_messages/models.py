@@ -15,6 +15,7 @@ class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='sent_messages')
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    viewed = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.sender} write: {self.content}'

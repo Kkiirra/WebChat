@@ -1,9 +1,12 @@
 from django.urls import path
 from .views import MessageView, example, ChatUser
+from .get_apitoken import CustomAuthToken
 
 app_name = 'chat_messages'
 
 urlpatterns = [
+    path('api/token/', CustomAuthToken.as_view(), name='get_auth_token'),
+
     path('api/messages/', example),
     path('api/messages/<int:message_id>', example),
 

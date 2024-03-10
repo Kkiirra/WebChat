@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'customuser',
     'chat_messages',
     'rest_framework',
+    'rest_framework.authtoken',
     'channels',
 ]
 

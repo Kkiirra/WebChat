@@ -4,8 +4,8 @@ from chat_messages.models import Chat
 
 
 def dashboard(request):
-    user_chats = Chat.objects.filter(Q(user1=request.user) | Q(user2=request.user))
 
+    user_chats = Chat.objects.filter(Q(user1=request.user) | Q(user2=request.user))
     chats_with_messages = []
     if user_chats:
         for chat in user_chats:
@@ -14,7 +14,10 @@ def dashboard(request):
             chat_info = {
                 'chat': chat,
                 'last_message': last_message,
+                'last_message_status': last_message.viewed,
                 'other_user_username': other_user.nickname,
+                'other_user_id': other_user.id,
+                'other_user_status': other_user.is_online,
                 # 'other_user_avatar': other_user.avatar.url if other_user.avatar else '/path/to/default/avatar.jpg',
             }
             chats_with_messages.append(chat_info)

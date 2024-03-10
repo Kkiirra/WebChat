@@ -10,11 +10,13 @@ from asgiref.sync import sync_to_async
 from .models import Message, Chat
 from .serializer import MessageSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 
 
 class MessageView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    accepted_renderer = [JSONRenderer]
 
     def get(self, request, *args, **kwargs):
         chat_id = kwargs.get('chat_id')

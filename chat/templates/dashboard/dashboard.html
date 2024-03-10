@@ -115,7 +115,7 @@
                 <div class="chat-user-panel">
                 <div class="pb-3 d-flex flex-column navigation-mobile pagination-scrool chat-user-scroll">
     {% for chat_info in chats_with_messages %}
-        <div class="chat-item d-flex pl-3 pr-0 pt-3 pb-3" id="{{chat_info.chat.id}}">
+        <div class="chat-item d-flex pl-3 pr-0 pt-3 pb-3 {% if chat_info.last_message_status == False %}active {% endif %} " id="{{chat_info.chat.id}}" data-user-id="{{chat_info.other_user_id}}">
             <div class="w-100">
                 <div class="d-flex pl-0">
                   {% if chat.other_user.profile_picture %}
@@ -123,7 +123,6 @@
                   {% else %}
                     <div class="avatar-circle">{{ chat_info.other_user_username|first }}</div>
                   {% endif %}
-
                     <div>
                         <p class="margin-auto fw-400 text-dark-75">{{ chat_info.other_user_username }}</p>
                         <div class="d-flex flex-row mt-1">
@@ -145,9 +144,20 @@
             </div>
             <div class="flex-shrink-0 margin-auto pl-2 pr-3">
                 <div class="d-flex flex-column">
+                    <div class="chat_status">
+                    {% if chat_info.other_user_status == True %}
+                        Online
+                    {% else %}
+                        Offline
+                    {% endif %}
+                    </div>
+
 
                     {% if chat_info.last_message %}
-                    <p class="text-muted text-right fs-13 mb-2">{{ chat_info.last_message.timestamp }}</p>
+                    <p class="text-muted fs-13 mb-2">{{ chat_info.last_message.timestamp|time }}</p>
+                    {% endif %}
+                    {% if chat_info.last_message_status == False %}
+                    <span class="round badge badge-light-success margin-auto">2</span>
                     {% endif %}
                 </div>
             </div>
@@ -168,7 +178,7 @@
                         <a href="!#">
                           <p class="fw-400 mb-0 text-dark-75" id="ChatUserName"></p>
                         </a>
-                        <p class="sub-caption text-muted text-small mb-0" id="last_seen"><i class="la la-clock mr-1"></i></p>
+                        <p class="sub-caption text-muted text-small mb-0" id="last_seen" data-user-id><i class="la la-clock mr-1"></i></p>
                       </div>
                     </div>
                     <div class="flex-shrink-0 margin-auto">
@@ -304,6 +314,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.25.0/date-fns.min.js"></script>
     <script src="{% static 'javascript/chat.js' %}"></script>
+
 
 
 

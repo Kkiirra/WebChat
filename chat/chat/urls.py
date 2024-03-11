@@ -10,6 +10,7 @@ urlpatterns = [
     path('', include('dashboard.urls', namespace='dashboard')),
     path('', include('customuser.urls', namespace='customuser')),
     path('', include('chat_messages.urls', namespace='chat_messages')),
+    path('', include('API_chat.urls', namespace='API_chat')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 
 ]

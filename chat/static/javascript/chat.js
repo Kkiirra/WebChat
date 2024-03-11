@@ -56,18 +56,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (data.type == 'user.isonline') {
             console.log('User is online');
             var element = document.querySelector('[data-user-id="' + user_id + '"]');
-
-            if (element) {
+            var last_seen = document.querySelector('[data-chat-id]');
             var chatStatusDiv = element.querySelector('.chat_status');
-            chatStatusDiv.textContent = "Online"
+            if (last_seen) {
+                var chat_value = last_seen.getAttribute('data-chat-id');
             }
-        }else if (data.type == 'user.isoffline') {
-            console.log('User is offline');
-            var element = document.querySelector('[data-user-id="' + user_id + '"]');
-
-            if (element) {
-                var chatStatusDiv = element.querySelector('.chat_status');
+            if (element && data.is_online) {
+                chatStatusDiv.textContent = "Online"
+                if (chat_value == user_id) {
+                    last_seen.textContent = "Online";
+                }
+            } else if (element && !data.is_online) {
                 chatStatusDiv.textContent = "Offline";
+                console.log(chat_value, user_id)
+                if (chat_value == user_id) {
+                    last_seen.textContent = "Offline";
+                }
+
             }
         }
 
@@ -94,7 +99,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Отображение информации о пользователе чата
         paragraph.textContent = ChatUserInfo.nickname;
         image_div.textContent = ChatUserInfo.nickname[0];
-        last_seen.textContent = 'Last seen ' + formatLastSeen(ChatUserInfo.last_login);
+        last_seen.setAttribute('data-chat-id', ChatUserInfo.id);
+        if (ChatUserInfo.is_online) {
+            last_seen.textContent = 'Online'
+        }
+        else {
+            last_seen.innerHTML = '<i class="la la-clock mr-1"></i>' + 'Last seen ' + formatLastSeen(ChatUserInfo.last_login);        }
 
         // Очистка текущего чата
         clearChat();
@@ -273,8 +283,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function scrollToBottom() {
-        var containerHeight = $('.scrollable-chat-panel').height();
-        $('.scrollable-chat-panel').scrollTop(containerHeight + 10000);
+    const messagesContainer = document.querySelector('.dialog_panel');
+    const lastMessage = messagesContainer.lastElementChild;
+    if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
     }
 
     // Обработчик события нажатия клавиши "Enter" в поле ввода сообщения

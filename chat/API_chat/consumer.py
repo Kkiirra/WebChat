@@ -1,17 +1,9 @@
-import json
-from django.utils import timezone
-from channels.consumer import AsyncConsumer
-from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import Message, Chat
-from django.contrib.auth import get_user_model
-from asgiref.sync import sync_to_async, async_to_sync
-
 
 import json
 from django.utils import timezone
 from channels.consumer import AsyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import Message, Chat
+from chat_messages.models import Message, Chat
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async, async_to_sync
 from .redis_operations import get_channel_name, save_channel_name, get_all_channel_names
@@ -27,11 +19,11 @@ class Consumer(AsyncWebsocketConsumer):
         channel_name = self.channel_name
         save_channel_name(user_id, channel_name)
 
-        print(get_all_channel_names('channels_name'))
         await self.accept()
 
     async def disconnect(self, code):
         self.user.is_online = False
+        self.user.last_login = timezone.now()
         await sync_to_async(self.user.save)()
 
         for user_id in self.users_list:
@@ -41,7 +33,7 @@ class Consumer(AsyncWebsocketConsumer):
                 await self.channel_layer.send(
                     channel_name,
                     {
-                        'type': 'user.isoffline',
+                        'type': 'user.isonline',
                         'user_id': self.user.id,
                         'user_id_new': self.user.nickname,
                         'is_online': False,
@@ -51,6 +43,7 @@ class Consumer(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
+
         if message_type == 'user_status':
             chat_user_map = text_data_json.get('chat_user_map', None)
 
@@ -75,26 +68,10 @@ class Consumer(AsyncWebsocketConsumer):
                     )
         elif message_type == 'new_message':
             pass
-        elif message_type == 'user_disconnect':
-            print(text_data_json, 'GDSGDS')
         else:
             pass
 
     async def user_isonline(self, event):
-        def_type = event['type']
-        user_id = event['user_id']
-        is_online = event['is_online']
-        user_id_new = event['user_id_new']
-
-        await self.send(text_data=json.dumps({
-            'type': def_type,
-            'user_id': user_id,
-            'is_online': is_online,
-            'user_id_new': user_id_new,
-
-        }))
-
-    async def user_isoffline(self, event):
         def_type = event['type']
         user_id = event['user_id']
         is_online = event['is_online']
